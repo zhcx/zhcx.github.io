@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Simple Note]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://zhcx.github.io/"/>
-  <updated>2016-01-12T00:51:32.185Z</updated>
+  <updated>2016-01-12T09:14:15.978Z</updated>
   <id>http://zhcx.github.io/</id>
   
   <author>
@@ -13,6 +13,25 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[My New Post]]></title>
+    <link href="http://zhcx.github.io/2016/01/12/My-New-Post/"/>
+    <id>http://zhcx.github.io/2016/01/12/My-New-Post/</id>
+    <published>2016-01-12T09:13:02.000Z</published>
+    <updated>2016-01-12T09:14:15.978Z</updated>
+    <content type="html"><![CDATA[<p>一个正常的测试发布文件</p>
+<h2 id="u4E00_u7EA7_u6807_u9898"><a href="#u4E00_u7EA7_u6807_u9898" class="headerlink" title="一级标题"></a>一级标题</h2><h3 id="u4E8C_u7EA7_u6807_u9898"><a href="#u4E8C_u7EA7_u6807_u9898" class="headerlink" title="二级标题"></a>二级标题</h3><blockquote>
+<p>代码测试</p>
+</blockquote>
+<p>```python<br>print (“Hello World”)<br>···</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>一个正常的测试发布文件</p>
+<h2 id="u4E00_u7EA7_u6807_u9898"><a href="#u4E00_u7EA7_u6807_u9898" class="headerlink" title="一级标题"></a>一级标题</h2><h3 id="]]>
+    </summary>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Hello World]]></title>
