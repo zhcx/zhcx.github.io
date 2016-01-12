@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://zhcx.github.io/about/index.html</loc>
+    <lastmod>2016-01-12T08:58:48.616Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://zhcx.github.io/tags/index.html</loc>
+    <lastmod>2016-01-12T08:55:14.423Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://zhcx.github.io/2016/01/12/hello-world/</loc>
     <lastmod>2016-01-12T00:51:32.185Z</lastmod>
   </url>
