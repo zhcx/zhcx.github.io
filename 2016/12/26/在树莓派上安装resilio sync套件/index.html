@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>在树莓派上安装 resilio-sync 套件 | I&#39;M ZCX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="这篇教程参考了 Resilio 官网教程 Installing Sync Package On Linux ，并针对树莓派进行了优化，使用套件库安装的优点是自动配置好 Sync 相关服务，无需手动配置。
+准备工作：
+树莓派3b一台（其他版本类似），系统为 Raspbian；
+挂载好硬盘，因为同步或下载需要空间，TF 卡显然放不下；
+树莓派连接到局域网，并可以通过 SSH 访问。
+
+从 btsync">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在树莓派上安装 resilio-sync 套件">
+<meta property="og:url" content="http://zcx.im/2016/12/26/在树莓派上安装resilio sync套件/index.html">
+<meta property="og:site_name" content="I'M ZCX">
+<meta property="og:description" content="这篇教程参考了 Resilio 官网教程 Installing Sync Package On Linux ，并针对树莓派进行了优化，使用套件库安装的优点是自动配置好 Sync 相关服务，无需手动配置。
+准备工作：
+树莓派3b一台（其他版本类似），系统为 Raspbian；
+挂载好硬盘，因为同步或下载需要空间，TF 卡显然放不下；
+树莓派连接到局域网，并可以通过 SSH 访问。
+
+从 btsync">
+<meta property="og:updated_time" content="2016-12-26T15:53:19.472Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在树莓派上安装 resilio-sync 套件">
+<meta name="twitter:description" content="这篇教程参考了 Resilio 官网教程 Installing Sync Package On Linux ，并针对树莓派进行了优化，使用套件库安装的优点是自动配置好 Sync 相关服务，无需手动配置。
+准备工作：
+树莓派3b一台（其他版本类似），系统为 Raspbian；
+挂载好硬盘，因为同步或下载需要空间，TF 卡显然放不下；
+树莓派连接到局域网，并可以通过 SSH 访问。
+
+从 btsync">
+    
+
+    
+        <link rel="alternate" href="http://zcx.im/atom.xml" title="I&#39;M ZCX" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-43937838-1# enter the tracking ID for your Google Analytics', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">I&#39;M ZCX</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">zhcx</h2>
+            <h3 id="title">Learning Everything</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Fuzhou, China</span>
+            <a id="follow" target="_blank" href="https://github.com/zhcx/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                9
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                13
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/zhcx" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://tiwtter.com/zcx" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://zcx.im/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-在树莓派上安装resilio sync套件" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            在树莓派上安装 resilio-sync 套件
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/12/26/在树莓派上安装resilio sync套件/">
+            <time datetime="2016-12-26T15:47:54.000Z" itemprop="datePublished">2016-12-26</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Resilio-Sync/">Resilio Sync</a>, <a class="tag-link" href="/tags/树莓派/">树莓派</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>这篇教程参考了 Resilio 官网教程 <a href="https://help.getsync.com/hc/en-us/articles/206178924-Installing-Sync-package-on-Linux" target="_blank" rel="external">Installing Sync Package On Linux</a> ，并针对树莓派进行了优化，使用套件库安装的优点是自动配置好 Sync 相关服务，无需手动配置。</p>
+<h3 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h3><ol>
+<li>树莓派3b一台（其他版本类似），系统为 Raspbian；</li>
+<li>挂载好硬盘，因为同步或下载需要空间，TF 卡显然放不下；</li>
+<li>树莓派连接到局域网，并可以通过 SSH 访问。</li>
+</ol>
+<h3 id="从-btsync-升级"><a href="#从-btsync-升级" class="headerlink" title="从 btsync 升级"></a>从 btsync 升级</h3><p>如果您之前安装过 btsync 套件并且正在运行，请在安装 resilio-sync 套件之前停止它；升级后btsync 里面的所有设置都会被迁移到 resilio-sync。</p>
+<p>不过升级之前，请先检查一下 <code>/var/lib/btsync</code> 这个文件夹的大小，确保你的设备的可用空间足够容纳两倍它的大小。如果这个文件夹太大，你可以安全地删除 sync.log （以及它的存档）和日志。 </p>
+<p>如果你并未安装 btsync 套件，请忽略上面这一步。</p>
+<h3 id="安装-resilio-sync"><a href="#安装-resilio-sync" class="headerlink" title="安装 resilio-sync"></a>安装 resilio-sync</h3><p>根据官方教程，在树莓派上面安装 resilio-sync 套件，只需三步：</p>
+<ol>
+<li>添加库；</li>
+<li>添加用于套件验证的PGP公钥；</li>
+<li>安装套件。</li>
+</ol>
+<p>由于树莓派的 Raspbian 系统基于 Debian ，所以我们要按照下面的教程安装：</p>
+<h4 id="添加库"><a href="#添加库" class="headerlink" title="添加库"></a>添加库</h4><p>创建文件 <code>/etc/apt/sources.list.d/resilio-sync.list</code> 并写入下面的内容以注册 Resilio 套件库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">deb [http://linux-packages.resilio.com/resilio-sync/deb](http://linux-packages.resilio.com/resilio-sync/deb) resilio-sync non-free</div></pre></td></tr></table></figure>
+<h4 id="添加公钥"><a href="#添加公钥" class="headerlink" title="添加公钥"></a>添加公钥</h4><p>使用下面的命令添加公钥：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget -qO - [https://linux-packages.resilio.com/resilio-sync/key.asc](https://linux-packages.resilio.com/resilio-sync/key.asc) | sudo apt-key add -</div></pre></td></tr></table></figure>
+<p>对于树莓派2和3（ arm64 架构） 还要运行下面的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo dpkg –add-architecture armhf sudo apt-get update</div></pre></td></tr></table></figure>
+<p>然后将 <code>/etc/apt/sources.list</code> 中的内容修改为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">deb [arch=armhf] [http://linux-packages.resilio.com/resilio-sync/deb](http://linux-packages.resilio.com/resilio-sync/deb) resilio-sync non-free</div></pre></td></tr></table></figure>
+<p>对于树莓派1则运行下面的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo dpkg –add-architecture armel</div></pre></td></tr></table></figure>
+<h4 id="安装-resilio-sync-套件"><a href="#安装-resilio-sync-套件" class="headerlink" title="安装 resilio-sync 套件"></a>安装 resilio-sync 套件</h4><p>使用下面的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update sudo apt-get install resilio-sync</div></pre></td></tr></table></figure>
+<p>对于树莓派1则运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update sudo apt-get install resilio-sync:armel</div></pre></td></tr></table></figure>
+<p>安装完成后，使用下面的命令删除旧版 btsync（可选）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get purge btsync</div></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>使用 IP 加端口号即可进入管理页面，默认端口号为 <code>8888</code>，例如访问 <code>127.0.0.1:8888</code>，第一次使用需要创建用户名和密码（请务必牢记），其他设置和桌面版类似，包括<a href="https://syncfan.com/post/2016-11-06-try-sync-pro-for-free-forever/" target="_blank" rel="external">免费使用PRO的方法</a>。</p>
+<h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><p>使用上面的方法安装完 Sync 之后，再次运行 <code>sudo apt-get update</code> 会提示下面的警告信息：</p>
+<blockquote>
+<p>W: Duplicate sources.list entry <a href="http://linux-packages.resilio.com/resilio-sync/deb/" target="_blank" rel="external">http://linux-packages.resilio.com/resilio-sync/deb/</a> resilio-sync/non-free armhf Packages (/var/lib/apt/lists/linux-packages.resilio.com_resilio-sync_deb_dists_resilio-sync_non-free_binary-armhf_Packages)<br>W: You may want to run apt-get update to correct these problems</p>
+</blockquote>
+<p>解决方法是删除第一步里面创建的这个这个文件 <code>/etc/apt/sources.list.d/resilio-sync.list</code>。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://zcx.im/2016/12/26/在树莓派上安装resilio sync套件/" data-id="cixemd0mo0006coezudkwp7pu" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://zcx.im/2016/12/26/在树莓派上安装resilio sync套件/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://zcx.im/2016/12/26/在树莓派上安装resilio sync套件/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/01/01/新年快乐/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    新年快乐
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2016/12/25/Python 3.6新特性简介/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Python 3.6新特性简介</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/12/26/在树莓派上安装resilio sync套件/" data-title="在树莓派上安装 resilio-sync 套件" data-url="http://zcx.im/2016/12/26/在树莓派上安装resilio sync套件/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/01/新年快乐/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/随记/">随记</a></p>
+                            <p class="item-title"><a href="/2017/01/01/新年快乐/" class="title">新年快乐</a></p>
+                            <p class="item-date"><time datetime="2017-01-01T12:11:59.000Z" itemprop="datePublished">2017-01-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/12/26/在树莓派上安装resilio sync套件/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2016/12/26/在树莓派上安装resilio sync套件/" class="title">在树莓派上安装 resilio-sync 套件</a></p>
+                            <p class="item-date"><time datetime="2016-12-26T15:47:54.000Z" itemprop="datePublished">2016-12-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/12/25/Python 3.6新特性简介/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://file-qn.zcx.im/python.png)" alt="Python 3.6新特性简介" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2016/12/25/Python 3.6新特性简介/" class="title">Python 3.6新特性简介</a></p>
+                            <p class="item-date"><time datetime="2016-12-25T15:07:19.000Z" itemprop="datePublished">2016-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/12/25/福州地铁体验/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://file-qn.zcx.im/%E4%B8%80%E5%8F%B7%E7%BA%BF%E7%BA%BF%E8%B7%AF%E5%9B%BE.jpg)" alt="福州地铁体验" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/随记/">随记</a></p>
+                            <p class="item-title"><a href="/2016/12/25/福州地铁体验/" class="title">福州地铁体验</a></p>
+                            <p class="item-date"><time datetime="2016-12-25T12:34:13.000Z" itemprop="datePublished">2016-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/12/24/平安夜快乐/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://file-qn.zcx.im/20161224%E6%99%9A%E9%A4%90.jpg)" alt="平安夜快乐" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/随拍/">随拍</a></p>
+                            <p class="item-title"><a href="/2016/12/24/平安夜快乐/" class="title">平安夜快乐</a></p>
+                            <p class="item-date"><time datetime="2016-12-24T15:14:08.000Z" itemprop="datePublished">2016-12-24</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/随拍/">随拍</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/随记/">随记</a><span class="category-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/Github-Pages/" style="font-size: 10px;">Github Pages</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Resilio-Sync/" style="font-size: 20px;">Resilio Sync</a> <a href="/tags/同步/" style="font-size: 10px;">同步</a> <a href="/tags/地铁/" style="font-size: 10px;">地铁</a> <a href="/tags/新年/" style="font-size: 10px;">新年</a> <a href="/tags/树莓派/" style="font-size: 10px;">树莓派</a> <a href="/tags/照片/" style="font-size: 10px;">照片</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://imzcx.lofter.com">Lofter</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 zhcx<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice" target="_blank">PPOffice</a><br>
+            <a href="http://www.miitbeian.gov.cn/"  target="_blank">闽ICP备16002197号-1</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'zhcx'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
