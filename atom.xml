@@ -106,7 +106,7 @@
     <link href="http://zcx.im/2016/12/25/Python%203.6%E6%96%B0%E7%89%B9%E6%80%A7%E7%AE%80%E4%BB%8B/"/>
     <id>http://zcx.im/2016/12/25/Python 3.6新特性简介/</id>
     <published>2016-12-25T15:07:19.000Z</published>
-    <updated>2016-12-25T15:16:24.560Z</updated>
+    <updated>2016-12-25T15:16:24.000Z</updated>
     
     <content type="html"><![CDATA[<p>本文转自：<a href="https://pycntech.github.io/Python3.6%E6%96%B0%E7%89%B9%E6%80%A7%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E4%B8%AD%E6%96%87%E7%89%88.html" target="_blank" rel="external">PyCN技术评论</a></p>
 <p>这篇文章介绍了与3.5相比， Python 3.6中多出的新特性。</p>
